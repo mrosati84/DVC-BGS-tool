@@ -48,8 +48,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__
-          releaseName: 'App v__VERSION__'
+          tagName: dvc-bgs-tool-v__VERSION__
+          releaseName: 'DVC BGS Tool v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
@@ -59,6 +59,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}-app
+          name: ${{ matrix.platform }}-dvc-bgs-tool
           path: |
             src-tauri/target/release/bundle/**

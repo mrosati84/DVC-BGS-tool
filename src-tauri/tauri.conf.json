@@ -7,8 +7,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "dvc-bgs-tool",
-    "version": "0.1.0"
+    "productName": "DaVinci Corp BGS Tool",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -20,7 +20,7 @@
     },
     "windows": [
       {
-        "title": "dvc-bgs-tool",
+        "title": "DaVinci Corp BGS Tool",
         "width": 900,
         "height": 800
       }
