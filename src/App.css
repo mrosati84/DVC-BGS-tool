@@ -1,0 +1,381 @@
+@font-face {
+  font-family: 'Orbitron';
+  src: url('assets/fonts/Orbitron-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 400 500 600 700 800 900;
+  /* Gamma di pesi variabili */
+  font-style: normal;
+}
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding-bottom: 4em;
+}
+
+.logo {
+  width: 15em;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+h1,
+h2 {
+  font-family: 'Orbitron';
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.1em;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-family: inherit;
+  color: #0f0f0f;
+  background-color: #ffffff;
+  transition: border-color 0.25s;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+button>span,
+label {
+  font-family: 'Orbitron';
+  font-weight: 100;
+}
+
+label {
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: #dedede;
+  padding: 1em;
+  border-radius: .5em;
+}
+
+button:hover,
+button.active {
+  border-color: #396cd8;
+}
+
+button:active {
+  border-color: #396cd8;
+  background-color: #e8e8e8;
+}
+
+button {
+  outline: none;
+}
+
+footer {
+  font-family: 'Orbitron';
+  font-weight: 100;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2em;
+  background-color: #034788;
+  color: #ffffff;
+  line-height: 2em;
+}
+
+.delta {
+  width: 40vw;
+  max-width: 30em;
+  margin: 0 0 1em 0;
+}
+
+.loader {
+  width: 1em;
+  height: 1em;
+  border: 3px solid;
+  border-color: #FF3D00 transparent;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  left: -7px;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+/* BGS Summary Table Styles */
+.bgs-summary {
+  width: 100%;
+  max-width: 800px;
+  overflow-x: auto;
+}
+
+.bgs-summary h2 {
+  margin-bottom: 1em;
+  color: #034788;
+}
+
+/* System list styles */
+.system-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.system-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.system-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8em 1.2em;
+  background-color: #034788;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.system-header:hover {
+  background-color: #0456a3;
+}
+
+.system-header h3 {
+  margin: 0;
+  font-family: 'Orbitron';
+  font-weight: 400;
+  font-size: 1.2em;
+  text-align: left;
+}
+
+.expand-icon {
+  font-size: 1em;
+  transition: transform 0.3s ease;
+}
+
+.system-header.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.system-details {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.activity-section {
+  width: 100%;
+}
+
+.activity-section h4 {
+  font-family: 'Orbitron';
+  color: #034788;
+  margin-bottom: 0.5em;
+  font-weight: 400;
+  text-align: left;
+}
+
+.bgs-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.5em;
+}
+
+.bgs-table th {
+  background-color: #0064c2;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+  font-family: 'Orbitron';
+  font-weight: 400;
+}
+
+.bgs-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.bgs-table tr:nth-child(even) {
+  background-color: rgba(3, 71, 136, 0.05);
+}
+
+.bgs-table tr:hover {
+  background-color: rgba(3, 71, 136, 0.1);
+}
+
+.bgs-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Activity Summary Table Styles */
+.activity-summary {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2em;
+  overflow-x: auto;
+}
+
+.activity-summary h2 {
+  margin-bottom: 1em;
+  color: #034788;
+}
+
+.activity-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.activity-summary th {
+  background-color: #034788;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+  font-family: 'Orbitron';
+  font-weight: 400;
+}
+
+.activity-summary td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.activity-summary tr:nth-child(even) {
+  background-color: rgba(3, 71, 136, 0.05);
+}
+
+.activity-summary tr:hover {
+  background-color: rgba(3, 71, 136, 0.1);
+}
+
+.activity-summary tr:last-child td {
+  border-bottom: none;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  60%,
+  100% {
+    transform: scale(1)
+  }
+
+  80% {
+    transform: scale(1.2)
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #2f2f2f;
+  }
+
+  a:hover {
+    color: #24c8db;
+  }
+
+  button {
+    background-color: #0f0f0f98;
+    color: #ffffff;
+  }
+
+  button:active {
+    background-color: #0f0f0f69;
+  }
+
+  pre {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .system-container {
+    background-color: #1a1a1a;
+  }
+
+  .system-header:hover {
+    background-color: #0456a3;
+  }
+
+  .activity-section h4 {
+    color: #4a8fd1;
+  }
+
+  .bgs-table th {
+    background-color: #034788;
+  }
+
+  .bgs-table td {
+    border-bottom: 1px solid #444;
+  }
+
+  .bgs-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .bgs-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .activity-summary th {
+    background-color: #034788;
+  }
+
+  .activity-summary td {
+    border-bottom: 1px solid #444;
+  }
+
+  .activity-summary tr:nth-child(even) {
+    background-color: rgba(3, 71, 136, 0.15);
+  }
+
+  .activity-summary tr:hover {
+    background-color: rgba(3, 71, 136, 0.25);
+  }
+}
