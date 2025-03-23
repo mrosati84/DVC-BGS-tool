@@ -238,7 +238,7 @@ function App() {
         </button>
         <button className={inf ? "active" : ""} onClick={(e) => { e.preventDefault(); activities(); }} style={{ marginLeft: "1em" }} type="submit">
           {loadingInf ? <span className="loader"></span> : ""}
-          <span>Attivita CMDRs</span>
+          <span>Attività CMDRs</span>
         </button>
       </form>
       <p>
