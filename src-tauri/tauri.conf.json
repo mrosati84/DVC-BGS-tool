@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "DaVinci Corp BGS Tool",
-    "version": "1.0.0"
+    "version": "1.0.3"
   },
   "tauri": {
     "allowlist": {
@@ -20,7 +20,7 @@
     },
     "windows": [
       {
-        "title": "DaVinci Corp BGS Tool",
+        "title": "DaVinci Corp. BGS Tool",
         "width": 900,
         "height": 800
       }
