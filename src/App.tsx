@@ -1,6 +1,4 @@
 import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,6 +6,7 @@ import { registerLocale } from "react-datepicker";
 import { it } from "date-fns/locale";
 
 function App() {
+  const API_DOMAIN = "http://3.126.237.15"
   const [greetMsg, setGreetMsg] = useState("");
   const [loadingDelta, setLoadingDelta] = useState(false);
   const [loadingInf, setLoadingInf] = useState(false);
@@ -22,12 +21,12 @@ function App() {
   const [navData, setNavData] = useState<any>({});
   const [factionKillBonds, setFactionKillBonds] = useState<any>({});
   const [expandedSystems, setExpandedSystems] = useState<{ [key: string]: boolean }>({});
-  
+
   // Set initial dates: endDate to now, startDate to 24 hours ago
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
-  
+
   const [startDate, setStartDate] = useState<Date | null>(yesterday);
   const [endDate, setEndDate] = useState<Date | null>(now);
 
@@ -37,7 +36,7 @@ function App() {
   async function getDelta() {
     setLoadingDelta(true);
     setInf(false);
-    const res = await fetch("http://3.126.237.15/?delta=" + delta)
+    const res = await fetch(`${API_DOMAIN}/?delta=` + delta)
     setGreetMsg(await res.text());
     setLoadingDelta(false);
   }
@@ -59,15 +58,15 @@ function App() {
       const dateParams = `?start_date=${encodeURIComponent(startDateParam)}&end_date=${encodeURIComponent(endDateParam)}`;
 
       // Systems endpoint doesn't need date parameters
-      const systemsRes = await fetch("http://3.126.237.15/bgs/systems/")
-      
+      const systemsRes = await fetch(`${API_DOMAIN}/bgs/systems/`)
+
       // All other endpoints need date parameters
-      const missionsRes = await fetch(`http://3.126.237.15/bgs/missions/${dateParams}`)
-      const marketBuyRes = await fetch(`http://3.126.237.15/bgs/market_buy/${dateParams}`)
-      const marketSellRes = await fetch(`http://3.126.237.15/bgs/market_sell/${dateParams}`)
-      const bountiesRes = await fetch(`http://3.126.237.15/bgs/bounties/${dateParams}`)
-      const navDataRes = await fetch(`http://3.126.237.15/bgs/nav_data/${dateParams}`)
-      const factionKillBondsRes = await fetch(`http://3.126.237.15/bgs/faction_kill_bonds/${dateParams}`)
+      const missionsRes = await fetch(`${API_DOMAIN}/bgs/missions/${dateParams}`)
+      const marketBuyRes = await fetch(`${API_DOMAIN}/bgs/market_buy/${dateParams}`)
+      const marketSellRes = await fetch(`${API_DOMAIN}/bgs/market_sell/${dateParams}`)
+      const bountiesRes = await fetch(`${API_DOMAIN}/bgs/bounties/${dateParams}`)
+      const navDataRes = await fetch(`${API_DOMAIN}/bgs/nav_data/${dateParams}`)
+      const factionKillBondsRes = await fetch(`${API_DOMAIN}/bgs/faction_kill_bonds/${dateParams}`)
 
       const systemsData = await systemsRes.json();
       const missionsData = await missionsRes.json();
