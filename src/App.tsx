@@ -7,12 +7,17 @@ import { it } from "date-fns/locale";
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
 
+const CURRENT_TAG = "dvc-bgs-tool-v1.0.6"
+
 function App() {
   const API_DOMAIN = "http://3.126.237.15"
   const [greetMsg, setGreetMsg] = useState("");
   const [loadingDelta, setLoadingDelta] = useState(false);
   const [loadingInf, setLoadingInf] = useState(false);
   const [delta, setDelta] = useState(20);
+  const [updateModal, setUpdateModal] = useState(false);
+  const [lastVersion, setLastVersion] = useState(false);
+  const [downloadLink, setDownloadLink] = useState("");
 
   const [inf, setInf] = useState(false);
   const [systems, setSystems] = useState<string[]>([]);
@@ -34,6 +39,25 @@ function App() {
 
   // Register Italian locale
   registerLocale('it', it);
+
+  async function getUpdates() {
+    const response = await fetch("https://api.github.com/repos/mrosati84/DVC-BGS-tool/releases/latest", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "DVC BGS Tool/1.0.0 Tauri/1.5.4"
+      }
+    });
+    const data: any = await response.data;
+
+    if (data.tag_name !== CURRENT_TAG) {
+      setUpdateModal(true);
+      setLastVersion(data.tag_name);
+      setDownloadLink(data.html_url);
+    }
+
+    console.log(data)
+  }
 
   async function getDelta() {
     setLoadingDelta(true);
@@ -231,7 +255,31 @@ function App() {
   }
 
   return (
-    <main className="container">
+    <main onLoad={getUpdates} className="container">
+      {updateModal && (
+        <>
+          <div id="overlay"></div>
+          <div id="update-modal">
+            <h1>Aggiornamento disponibile</h1>
+            <p>Versione corrente: <b>{CURRENT_TAG}</b></p>
+            <p>Ultima versione: <b>{lastVersion}</b></p>
+            <button onClick={() => {
+              const link = document.createElement('a');
+              link.href = downloadLink;
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}>
+              <span>Scarica</span>
+            </button>
+            <button onClick={() => { setUpdateModal(false) }} style={{ marginLeft: '1em' }}>
+              <span>Chiudi</span>
+            </button>
+          </div>
+        </>
+      )}
       <img className="logo" src="dvc.png" width={300} alt="" />
       <h1>Gestione BGS</h1>
       <label htmlFor="delta">Scarto influenza: {delta}</label>
