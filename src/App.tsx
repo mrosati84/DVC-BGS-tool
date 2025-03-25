@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import { it } from "date-fns/locale";
+import { fetch, ResponseType } from '@tauri-apps/api/http';
+
 
 function App() {
   const API_DOMAIN = "http://3.126.237.15"
@@ -35,9 +37,15 @@ function App() {
 
   async function getDelta() {
     setLoadingDelta(true);
+    const response = await fetch(`${API_DOMAIN}/?delta=` + delta, {
+      method: "GET",
+      timeout: 30,
+      responseType: ResponseType.JSON
+    });
+    const data = await response.data;
+
     setInf(false);
-    const res = await fetch(`${API_DOMAIN}/?delta=` + delta)
-    setGreetMsg(await res.text());
+    setGreetMsg(data as string);
     setLoadingDelta(false);
   }
 
@@ -68,15 +76,15 @@ function App() {
       const navDataRes = await fetch(`${API_DOMAIN}/bgs/nav_data/${dateParams}`)
       const factionKillBondsRes = await fetch(`${API_DOMAIN}/bgs/faction_kill_bonds/${dateParams}`)
 
-      const systemsData = await systemsRes.json();
-      const missionsData = await missionsRes.json();
-      const marketBuyData = await marketBuyRes.json();
-      const marketSellData = await marketSellRes.json();
-      const bountiesData = await bountiesRes.json();
-      const navDataData = await navDataRes.json();
-      const factionKillBondsData = await factionKillBondsRes.json();
+      const systemsData = await systemsRes.data as string[];
+      const missionsData = await missionsRes.data;
+      const marketBuyData = await marketBuyRes.data;
+      const marketSellData = await marketSellRes.data;
+      const bountiesData = await bountiesRes.data;
+      const navDataData = await navDataRes.data;
+      const factionKillBondsData = await factionKillBondsRes.data;
 
-      setSystems(systemsData);
+      setSystems(systemsData as string[]);
       setMissions(missionsData);
       setMarketBuy(marketBuyData);
       setMarketSell(marketSellData);
@@ -240,12 +248,10 @@ function App() {
           <span>Attività CMDRs</span>
         </button>
       </form>
-      <p>
-        {greetMsg ? <div>
-          <pre>{greetMsg}</pre>
-          <button onClick={() => copyToClipboard(greetMsg)}><span>Copia nella clipboard</span></button>
-        </div> : ""}
-      </p>
+      {greetMsg ? <div>
+        <pre>{greetMsg}</pre>
+        <button onClick={() => copyToClipboard(greetMsg)}><span>Copia nella clipboard</span></button>
+      </div> : ""}
 
       {inf && systems.length > 0 && (
         <div className="bgs-summary">
