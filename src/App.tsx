@@ -7,7 +7,7 @@ import { it } from "date-fns/locale";
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
 
-const CURRENT_TAG = "dvc-bgs-tool-v1.0.6"
+const CURRENT_TAG = "dvc-bgs-tool-v1.0.7"
 
 function App() {
   const API_DOMAIN = "http://3.126.237.15"
@@ -25,6 +25,7 @@ function App() {
   const [marketBuy, setMarketBuy] = useState<any>({});
   const [marketSell, setMarketSell] = useState<any>({});
   const [bounties, setBounties] = useState<any>({});
+  const [vouchers, setVouchers] = useState<any>({});
   const [navData, setNavData] = useState<any>({});
   const [factionKillBonds, setFactionKillBonds] = useState<any>({});
   const [expandedSystems, setExpandedSystems] = useState<{ [key: string]: boolean }>({});
@@ -97,6 +98,7 @@ function App() {
       const marketBuyRes = await fetch(`${API_DOMAIN}/bgs/market_buy/${dateParams}`)
       const marketSellRes = await fetch(`${API_DOMAIN}/bgs/market_sell/${dateParams}`)
       const bountiesRes = await fetch(`${API_DOMAIN}/bgs/bounties/${dateParams}`)
+      const vouchersRes = await fetch(`${API_DOMAIN}/bgs/vouchers/${dateParams}`)
       const navDataRes = await fetch(`${API_DOMAIN}/bgs/nav_data/${dateParams}`)
       const factionKillBondsRes = await fetch(`${API_DOMAIN}/bgs/faction_kill_bonds/${dateParams}`)
 
@@ -105,6 +107,7 @@ function App() {
       const marketBuyData = await marketBuyRes.data;
       const marketSellData = await marketSellRes.data;
       const bountiesData = await bountiesRes.data;
+      const vouchersData = await vouchersRes.data;
       const navDataData = await navDataRes.data;
       const factionKillBondsData = await factionKillBondsRes.data;
 
@@ -113,6 +116,7 @@ function App() {
       setMarketBuy(marketBuyData);
       setMarketSell(marketSellData);
       setBounties(bountiesData);
+      setVouchers(vouchersData);
       setNavData(navDataData);
       setFactionKillBonds(factionKillBondsData);
 
@@ -152,6 +156,7 @@ function App() {
       (marketBuy[system] && Object.keys(marketBuy[system]).length > 0) ||
       (marketSell[system] && Object.keys(marketSell[system]).length > 0) ||
       (bounties[system] && Object.keys(bounties[system]).length > 0) ||
+      (vouchers[system] && Object.keys(vouchers[system]).length > 0) ||
       (navData[system] && Object.keys(navData[system]).length > 0) ||
       (factionKillBonds[system] && Object.keys(factionKillBonds[system]).length > 0)
     );
@@ -224,6 +229,19 @@ function App() {
     const result: { commander: string; credits: string }[] = [];
 
     Object.entries(bounties[system]).forEach(([commander, credits]) => {
+      result.push({ commander, credits: formatCredits(credits as string) });
+    });
+
+    return result;
+  };
+
+  // Helper function to get vouchers data for a system
+  const getVouchersData = (system: string) => {
+    if (!vouchers[system]) return [];
+
+    const result: { commander: string; credits: string }[] = [];
+
+    Object.entries(vouchers[system]).forEach(([commander, credits]) => {
       result.push({ commander, credits: formatCredits(credits as string) });
     });
 
@@ -458,6 +476,29 @@ function App() {
                           </thead>
                           <tbody>
                             {getBountiesData(system).map((item, index) => (
+                              <tr key={`bounty-${index}`}>
+                                <td>{item.commander}</td>
+                                <td>{item.credits}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* Vouchers Table */}
+                    {getVouchersData(system).length > 0 && (
+                      <div className="activity-section">
+                        <h4>Vouchers</h4>
+                        <table className="bgs-table">
+                          <thead>
+                            <tr>
+                              <th>CMDR</th>
+                              <th>Crediti</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {getVouchersData(system).map((item, index) => (
                               <tr key={`bounty-${index}`}>
                                 <td>{item.commander}</td>
                                 <td>{item.credits}</td>
