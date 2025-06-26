@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "DaVinci Corp BGS Tool",
-    "version": "1.0.6"
+    "version": "1.0.7"
   },
   "tauri": {
     "allowlist": {
@@ -21,6 +21,7 @@
         "all": true,
         "request": true,
         "scope": [
+          "http://localhost:5000/*",
           "http://3.126.237.15/*",
           "https://api.github.com/*"
         ]
