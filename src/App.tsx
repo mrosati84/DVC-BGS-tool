@@ -7,10 +7,10 @@ import { it } from "date-fns/locale";
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
 
-const CURRENT_TAG = "dvc-bgs-tool-v1.0.7"
+const CURRENT_TAG = "dvc-bgs-tool-v1.0.8"
 
 function App() {
-  const API_DOMAIN = "http://3.126.237.15"
+  const API_DOMAIN = "https://dvc-tool.mrosati.it"
   const [greetMsg, setGreetMsg] = useState("");
   const [loadingDelta, setLoadingDelta] = useState(false);
   const [loadingInf, setLoadingInf] = useState(false);

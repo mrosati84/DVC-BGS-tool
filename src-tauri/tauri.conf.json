@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "DaVinci Corp BGS Tool",
-    "version": "1.0.7"
+    "version": "1.0.8"
   },
   "tauri": {
     "allowlist": {
@@ -22,6 +22,7 @@
         "request": true,
         "scope": [
           "http://localhost:5000/*",
+          "https://dvc-tool.mrosati.it/*",
           "http://3.126.237.15/*",
           "https://api.github.com/*"
         ]
