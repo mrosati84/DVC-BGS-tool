@@ -10,7 +10,7 @@ import { fetch, ResponseType } from '@tauri-apps/api/http';
 const CURRENT_TAG = "dvc-bgs-tool-v1.0.9"
 
 function App() {
-  const API_DOMAIN = "http://localhost:5000"
+  const API_DOMAIN = "https://dvc-tool.mrosati.it"
   const [greetMsg, setGreetMsg] = useState("");
   const [loadingDelta, setLoadingDelta] = useState(false);
   const [loadingInf, setLoadingInf] = useState(false);
