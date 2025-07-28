@@ -7,10 +7,10 @@ import { it } from "date-fns/locale";
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
 
-const CURRENT_TAG = "dvc-bgs-tool-v1.0.8"
+const CURRENT_TAG = "dvc-bgs-tool-v1.0.9"
 
 function App() {
-  const API_DOMAIN = "https://dvc-tool.mrosati.it"
+  const API_DOMAIN = "http://localhost:5000"
   const [greetMsg, setGreetMsg] = useState("");
   const [loadingDelta, setLoadingDelta] = useState(false);
   const [loadingInf, setLoadingInf] = useState(false);
@@ -25,9 +25,8 @@ function App() {
   const [marketBuy, setMarketBuy] = useState<any>({});
   const [marketSell, setMarketSell] = useState<any>({});
   const [bounties, setBounties] = useState<any>({});
-  const [vouchers, setVouchers] = useState<any>({});
+  const [combatBonds, setCombatBonds] = useState<any>({});
   const [navData, setNavData] = useState<any>({});
-  const [factionKillBonds, setFactionKillBonds] = useState<any>({});
   const [expandedSystems, setExpandedSystems] = useState<{ [key: string]: boolean }>({});
 
   // Set initial dates: endDate to now, startDate to 24 hours ago
@@ -46,7 +45,7 @@ function App() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "DVC BGS Tool/1.0.0 Tauri/1.5.4"
+        "User-Agent": `DVC BGS Tool/${CURRENT_TAG} Tauri/1.5.4`
       }
     });
     const data: any = await response.data;
@@ -98,27 +97,24 @@ function App() {
       const marketBuyRes = await fetch(`${API_DOMAIN}/bgs/market_buy/${dateParams}`)
       const marketSellRes = await fetch(`${API_DOMAIN}/bgs/market_sell/${dateParams}`)
       const bountiesRes = await fetch(`${API_DOMAIN}/bgs/bounties/${dateParams}`)
-      const vouchersRes = await fetch(`${API_DOMAIN}/bgs/vouchers/${dateParams}`)
+      const combatBondsRes = await fetch(`${API_DOMAIN}/bgs/combat_bonds/${dateParams}`)
       const navDataRes = await fetch(`${API_DOMAIN}/bgs/nav_data/${dateParams}`)
-      const factionKillBondsRes = await fetch(`${API_DOMAIN}/bgs/faction_kill_bonds/${dateParams}`)
 
       const systemsData = await systemsRes.data as string[];
       const missionsData = await missionsRes.data;
       const marketBuyData = await marketBuyRes.data;
       const marketSellData = await marketSellRes.data;
       const bountiesData = await bountiesRes.data;
-      const vouchersData = await vouchersRes.data;
+      const combatBondsData = await combatBondsRes.data;
       const navDataData = await navDataRes.data;
-      const factionKillBondsData = await factionKillBondsRes.data;
 
       setSystems(systemsData as string[]);
       setMissions(missionsData);
       setMarketBuy(marketBuyData);
       setMarketSell(marketSellData);
       setBounties(bountiesData);
-      setVouchers(vouchersData);
+      setCombatBonds(combatBondsData);
       setNavData(navDataData);
-      setFactionKillBonds(factionKillBondsData);
 
       // Initialize expanded state for all systems
       const initialExpandedState: { [key: string]: boolean } = {};
@@ -156,9 +152,8 @@ function App() {
       (marketBuy[system] && Object.keys(marketBuy[system]).length > 0) ||
       (marketSell[system] && Object.keys(marketSell[system]).length > 0) ||
       (bounties[system] && Object.keys(bounties[system]).length > 0) ||
-      (vouchers[system] && Object.keys(vouchers[system]).length > 0) ||
-      (navData[system] && Object.keys(navData[system]).length > 0) ||
-      (factionKillBonds[system] && Object.keys(factionKillBonds[system]).length > 0)
+      (combatBonds[system] && Object.keys(combatBonds[system]).length > 0) ||
+      (navData[system] && Object.keys(navData[system]).length > 0)
     );
   };
 
@@ -235,34 +230,14 @@ function App() {
     return result;
   };
 
-  // Helper function to get vouchers data for a system
-  const getVouchersData = (system: string) => {
-    if (!vouchers[system]) return [];
+  // Helper function to get bounties data for a system
+  const getCombatBondsData = (system: string) => {
+    if (!combatBonds[system]) return [];
 
     const result: { commander: string; credits: string }[] = [];
 
-    Object.entries(vouchers[system]).forEach(([commander, credits]) => {
+    Object.entries(combatBonds[system]).forEach(([commander, credits]) => {
       result.push({ commander, credits: formatCredits(credits as string) });
-    });
-
-    return result;
-  };
-
-  // Helper function to get faction kill bonds data for a system
-  const getFactionKillBondsData = (system: string) => {
-    if (!factionKillBonds[system]) return [];
-
-    const result: { commander: string; victimFaction: string; awardingFaction: string; totalBond: string }[] = [];
-
-    Object.entries(factionKillBonds[system]).forEach(([commander, bondsData]) => {
-      (bondsData as Array<{ awarding_faction: string; total_bond: string; victim_faction: string }>).forEach(bond => {
-        result.push({
-          commander,
-          victimFaction: bond.victim_faction,
-          awardingFaction: bond.awarding_faction,
-          totalBond: formatCredits(bond.total_bond)
-        });
-      });
     });
 
     return result;
@@ -363,6 +338,52 @@ function App() {
 
                 {expandedSystems[system] && (
                   <div className="system-details">
+                    {/* Bounties Table */}
+                    {getBountiesData(system).length > 0 && (
+                      <div className="activity-section">
+                        <h4>Bounties</h4>
+                        <table className="bgs-table">
+                          <thead>
+                            <tr>
+                              <th>CMDR</th>
+                              <th>Crediti</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {getBountiesData(system).map((item, index) => (
+                              <tr key={`bounty-${index}`}>
+                                <td>{item.commander}</td>
+                                <td>{item.credits}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* Combat Bonds Table */}
+                    {getCombatBondsData(system).length > 0 && (
+                      <div className="activity-section">
+                        <h4>Combat Bonds</h4>
+                        <table className="bgs-table">
+                          <thead>
+                            <tr>
+                              <th>CMDR</th>
+                              <th>Crediti</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {getCombatBondsData(system).map((item, index) => (
+                              <tr key={`bounty-${index}`}>
+                                <td>{item.commander}</td>
+                                <td>{item.credits}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
                     {/* Missions Table */}
                     {getMissionsData(system).length > 0 && (
                       <div className="activity-section">
@@ -456,79 +477,6 @@ function App() {
                                 <td>{item.commander}</td>
                                 <td>{item.station}</td>
                                 <td>{item.credits}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* Bounties Table */}
-                    {getBountiesData(system).length > 0 && (
-                      <div className="activity-section">
-                        <h4>Bounties</h4>
-                        <table className="bgs-table">
-                          <thead>
-                            <tr>
-                              <th>CMDR</th>
-                              <th>Crediti</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {getBountiesData(system).map((item, index) => (
-                              <tr key={`bounty-${index}`}>
-                                <td>{item.commander}</td>
-                                <td>{item.credits}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* Vouchers Table */}
-                    {getVouchersData(system).length > 0 && (
-                      <div className="activity-section">
-                        <h4>Vouchers</h4>
-                        <table className="bgs-table">
-                          <thead>
-                            <tr>
-                              <th>CMDR</th>
-                              <th>Crediti</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {getVouchersData(system).map((item, index) => (
-                              <tr key={`bounty-${index}`}>
-                                <td>{item.commander}</td>
-                                <td>{item.credits}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* Faction Kill Bonds Table */}
-                    {getFactionKillBondsData(system).length > 0 && (
-                      <div className="activity-section">
-                        <h4>Faction Kill Bonds</h4>
-                        <table className="bgs-table">
-                          <thead>
-                            <tr>
-                              <th>CMDR</th>
-                              <th>Fazione Riconoscente</th>
-                              <th>Fazione Vittima</th>
-                              <th>Bond Totali</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {getFactionKillBondsData(system).map((item, index) => (
-                              <tr key={`kill-bond-${index}`}>
-                                <td>{item.commander}</td>
-                                <td>{item.awardingFaction}</td>
-                                <td>{item.victimFaction}</td>
-                                <td>{item.totalBond}</td>
                               </tr>
                             ))}
                           </tbody>
