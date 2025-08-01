@@ -44,11 +44,13 @@ where
     Ok(())
 }
 
-#[command]
+#[tauri::command]
 fn zip_binds() -> bool {
+    use std::fs::File;
+    use std::path::PathBuf;
+
     // Ottieni %LOCALAPPDATA%
     let local_appdata = std::env::var("LOCALAPPDATA").unwrap_or_default();
-
     if local_appdata.is_empty() {
         return false;
     }
@@ -63,20 +65,19 @@ fn zip_binds() -> bool {
         return false;
     }
 
-    // Ottieni %USERPROFILE%\Desktop
-
-    let userprofile = std::env::var("USERPROFILE").unwrap_or_default();
-
-    if userprofile.is_empty() {
-        return false;
-    }
-
-    let desktop = PathBuf::from(userprofile)
-        .join("Desktop")
-        .join("Bindings.zip");
+    // Ottieni il percorso dell'eseguibile e la relativa directory
+    let exe_path = match std::env::current_exe() {
+        Ok(path) => path,
+        Err(_) => return false,
+    };
+    let exe_dir = match exe_path.parent() {
+        Some(parent) => parent,
+        None => return false,
+    };
+    let destination = exe_dir.join("Bindings.zip");
 
     // Crea lo zip
-    match File::create(&desktop) {
+    match File::create(&destination) {
         Ok(file) => match zip_dir(&bindings_dir, file, zip::CompressionMethod::Deflated) {
             Ok(_) => true,
             Err(_) => false,
