@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use dirs::desktop_dir;
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
@@ -44,13 +45,11 @@ where
     Ok(())
 }
 
-#[tauri::command]
+#[command]
 fn zip_binds() -> bool {
-    use std::fs::File;
-    use std::path::PathBuf;
-
     // Ottieni %LOCALAPPDATA%
     let local_appdata = std::env::var("LOCALAPPDATA").unwrap_or_default();
+
     if local_appdata.is_empty() {
         return false;
     }
@@ -65,23 +64,21 @@ fn zip_binds() -> bool {
         return false;
     }
 
-    // Ottieni il percorso dell'eseguibile e la relativa directory
-    let exe_path = match std::env::current_exe() {
-        Ok(path) => path,
-        Err(_) => return false,
-    };
-    let exe_dir = match exe_path.parent() {
-        Some(parent) => parent,
+    // Usa dirs::desktop_dir per trovare la directory Desktop
+
+    let desktop = match desktop_dir() {
+        Some(path) => path.join("Bindings.zip"),
         None => return false,
     };
-    let destination = exe_dir.join("Bindings.zip");
 
     // Crea lo zip
-    match File::create(&destination) {
+
+    match File::create(&desktop) {
         Ok(file) => match zip_dir(&bindings_dir, file, zip::CompressionMethod::Deflated) {
             Ok(_) => true,
             Err(_) => false,
         },
+
         Err(_) => false,
     }
 }
